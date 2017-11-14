@@ -1,6 +1,5 @@
 import { Injectable, Renderer2, RendererStyleFlags2 } from '@angular/core';
 import { EventManager } from '@angular/platform-browser';
-import { CanvasElement } from './canvas-element';
 import { CanvasXml } from './canvas-xml';
 
 @Injectable()
@@ -54,8 +53,8 @@ export class CanvasRenderer implements Renderer2 {
   nextSibling(node: any): any {
     console.log('sibling');
   }
-  setAttribute(el: any, name: string, value: string, namespace?: string | null): void {
-
+  setAttribute(el: Element, name: string, value: string, namespace?: string | null): void {
+    el.setAttribute(name, value);
   }
   removeAttribute(el: any, name: string, namespace?: string | null): void {
 
