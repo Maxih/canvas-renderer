@@ -1,28 +1,21 @@
 # CanvasRenderer
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.0.
+This is an educational project used for experimenting with the abstraction between Angulars components and render strategy.
+The goal to render an angular app inside a canvas is contrived and was not meant to suit any particular need.
 
-## Development server
+## Overview
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+This project bootstraps Angular using a platform whose RendererFactory2 is overloaded by the CanvasRendererFactory.
+This factory returns an instance of the test renderer CanvasRenderer, which writes to an XML Document instead of the Browsers
+DOM. The XML document is then rendered inside of an SVG, which is saved as an image and ultimately drawn onto the canvas.
 
-## Code scaffolding
+## Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
+This was made using Angulars CLI, and can be installed and run using `npm install`/`ng serve`
 
-## Build
+## Thoughts
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+In my opinion, the abstraction between Angular and the DOM is one of the more interesting paradigms in the angular framework.
+The most obvious example of the importance of this abstraction is the ability to run component logic in webworkers, and a lower
+level understanding of this portion of Angular helps lend credence to the need to abide by Angular best practices in order to avoid
+breaking the abstraction layer that makes this possible.
