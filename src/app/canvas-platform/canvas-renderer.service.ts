@@ -1,9 +1,12 @@
 import { Injectable, Renderer2, RendererStyleFlags2 } from '@angular/core';
 import { EventManager } from '@angular/platform-browser';
 import { CanvasElement } from './canvas-element';
+import { CanvasXml } from './canvas-xml';
 
 @Injectable()
 export class CanvasRenderer implements Renderer2 {
+  context: CanvasXml;
+
   data: {
     [key: string]: any;
   };
@@ -16,22 +19,20 @@ export class CanvasRenderer implements Renderer2 {
   destroy(): void {
 
   }
-  createElement(name: string, namespace?: string | null): CanvasElement {
-    console.log('create', name, namespace);
-    return new CanvasElement(null, name);
+  createElement(name: string, namespace?: string | null): Element {
+    return this.context.createElement(name);
   }
-  createComment(value: string): any {
-    console.log('comment', value);
-    return value;
+  createComment(value: string): Comment {
+    return this.context.createComment(value);
   }
-  createText(value: string): CanvasElement {
-    return new CanvasElement(null, '#text', value);
+  createText(value: string): Text {
+    return this.context.createText(value);
   }
 
-  appendChild(parent: CanvasElement, newChild: CanvasElement): void {
-    console.log('append', parent.element, newChild.element, newChild.text);
-    parent.appendNode(newChild);
-    newChild.drawNode();
+  appendChild(parent: Element, newChild: Element): void {
+    parent.appendChild(newChild);
+
+    this.context.drawCanvas();
   }
   insertBefore(parent: any, newChild: any, refChild: any): void {
     console.log('insert', parent, newChild, refChild);
@@ -39,24 +40,17 @@ export class CanvasRenderer implements Renderer2 {
   removeChild(parent: any, oldChild: any): void {
     console.log('remove');
   }
-  selectRootElement(selectorOrNode: string | any): CanvasElement {
+  selectRootElement(selectorOrNode: string | any): Element {
     const el: HTMLCanvasElement = document.querySelector('#' + selectorOrNode) as HTMLCanvasElement;
+    const context: CanvasRenderingContext2D = el.getContext('2d');
+    this.context = new CanvasXml(context, selectorOrNode);
 
-    return new CanvasElement(el.getContext('2d'), 'canvas');
+    return this.context.selectRootNode();
   }
-  /**
-   * Attention: On WebWorkers, this will always return a value,
-   * as we are asking for a result synchronously. I.e.
-   * the caller can't rely on checking whether this is null or not.
-   */
   parentNode(node: any): any {
     console.log('parent', node);
   }
-  /**
-   * Attention: On WebWorkers, this will always return a value,
-   * as we are asking for a result synchronously. I.e.
-   * the caller can't rely on checking whether this is null or not.
-   */
+
   nextSibling(node: any): any {
     console.log('sibling');
   }
@@ -67,7 +61,8 @@ export class CanvasRenderer implements Renderer2 {
 
   }
   addClass(el: any, name: string): void {
-
+    console.log(el, name);
+    this.context.addClass(el, name);
   }
   removeClass(el: any, name: string): void {
 
